@@ -1,6 +1,5 @@
 USE sakila;
-
-SELECT * FROM film;
+SELECT * FROM film; -- Ver tabla a consultar
 
 -- 1. Selecciona todos los nombres de las películas sin que aparezcan duplicados.
 
@@ -28,7 +27,7 @@ WHERE description LIKE "%amazing%";
 SELECT * FROM film; -- Ver tabla a consultar
 
 SELECT 
-title
+title AS peliculas_duracion_mayor120
 FROM film
 WHERE length > 120;
 
@@ -93,6 +92,7 @@ GROUP BY r.customer_id;
 
 -- 11. Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
 
+-- Ver tabla a consultar
 SELECT * FROM rental; -- Peliculas alquiladas (inventory id)
 SELECT * FROM inventory; -- (inventory_id) (film_id)
 SELECT * FROM film_category; -- (film_id) (category_id)
@@ -111,6 +111,7 @@ INNER JOIN category c
 ON fc.category_id = c.category_id
 GROUP BY c.category_id;
 
+
 -- 12. Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y 
 -- muestra la clasificación junto con el promedio de duración.
 
@@ -124,6 +125,7 @@ GROUP BY rating;
 
 -- 13. Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love".
 
+-- Ver tabla a consultar
 SELECT * FROM film; -- (title) (film id)
 SELECT * FROM film_actor; -- (film_id) (actor_id)
 SELECT * FROM actor; -- (actor_id) (first_name) (last_name) 
@@ -147,11 +149,23 @@ title
 FROM film
 WHERE description LIKE "%dog%" OR "%cat%";
 
+
 -- 15. Hay algún actor o actriz que no apareca en ninguna película en la tabla film_actor.
 
+-- Ver tabla a consultar
 SELECT * FROM film; -- (title) (film_id)
 SELECT * FROM film_actor; -- (film_id) (actor_id)
 SELECT * FROM actor; -- (actor_id) (first_name) (last_name)
+
+SELECT
+a.first_name,
+a.last_name,
+fa.film_id
+FROM actor a
+LEFT JOIN film_actor fa
+ON a.actor_id = fa.actor_id
+WHERE fa.film_id IS NULL;
+
 
 SELECT
 a.actor_id,
@@ -163,6 +177,7 @@ LEFT JOIN film_actor fa
 ON a.actor_id = fa.actor_id
 GROUP BY a.actor_id;
 
+
 -- 16. Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010
 
 SELECT
@@ -172,6 +187,7 @@ WHERE release_year BETWEEN 2005 AND 2010;
 
 -- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family".
 
+-- Ver tabla a consultar
 SELECT * FROM film; -- (title) (film_id)
 SELECT * FROM film_category; -- (film_id) (category_id)
 SELECT * FROM category; -- (category_id) (name)
@@ -186,7 +202,8 @@ ON fc.category_id = c.category_id
 WHERE c.name = "Family";
 
 -- 18. Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
-USE Sakila;
+
+-- Ver tabla a consultar
 SELECT * FROM actor; -- Ver tabla actores (actor_id) (first_name) (last_name)
 SELECT * FROM film_actor; -- Ver tabla (actor_id) (film_id)
 
@@ -210,9 +227,10 @@ title
 FROM film
 WHERE rating = "R" AND length > 120;
 
--- 20. Encuentra las categorías de películas que tienen un promedio de duración superior a 120 
--- minutos y muestra el nombre de la categoría junto con el promedio de duración.
 
+-- 20. Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y muestra el nombre de la categoría junto con el promedio de duración.
+
+-- Ver tabla a consultar
 SELECT * FROM film; -- Ver tabla a consultar (title) (film_id) (length)
 SELECT * FROM film_category; -- (film_id) (category_id)
 SELECT * FROM category; -- (category_id) (name)
@@ -228,16 +246,16 @@ ON fC.category_id = c.category_id
 WHERE length > 120
 GROUP BY c.name;
 
--- 21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor 
--- junto con la cantidad de películas en las que han actuado.
+-- 21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
 
+-- Ver tabla a consultar
 SELECT * FROM actor; -- Ver tabla a consultar: (actor_id) (first_name)
 SELECT * FROM film_actor; -- (actor_id) (film_id)
 
 
 SELECT
 a.first_name,
-COUNT(fa.film_id) AS peliculas_en_las_que_aparece
+COUNT(fa.actor_id) AS peliculas_en_las_que_aparece
 FROM actor a
 INNER JOIN film_actor fa
 ON a.actor_id = fa.actor_id
@@ -276,9 +294,9 @@ WHERE i.inventory_id IN(
 GROUP BY f.title;
 
 -- 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la 
--- categoría "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en 
--- películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
+-- categoría "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
 
+-- Ver tabla a consultar
 SELECT * FROM actor; -- (first_name) (last_name) (actor_id)
 SELECT * FROM film_actor; -- (actor_id) (film_id)
 SELECT * FROM film_category; -- (film_id) (category_id)
@@ -302,9 +320,9 @@ ON fc.category_id = c.category_id
 WHERE c.name = "Horror");
 
 
--- 24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 
--- minutos en la tabla film con subconsultas.
+-- 24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film con subconsultas.
 
+-- Ver tabla a consultar
 SELECT * FROM film; -- (title) (length) (film_id)
 SELECT * FROM film_category; -- (film_id) (category_id)
 SELECT * FROM category; -- (category_id) (name)
@@ -330,21 +348,4 @@ USE sakila;
 SELECT * FROM film_actor; -- (actor_id) (film_id)
 SELECT * FROM actor; -- (actor_id) (first_name) (last_name)
 
-
-/*
-SELECT 
-a.first_name,
-a.last_name
-FROM actor a
-INNER JOIN film_actor fa
-ON a.actor_id = fa.actor_id
-WHERE film_id IN ( 
-SELECT-- Subconsulta para encontrar todos estos film_id
-	film_id
-	-- COUNT(actor_id) AS actores_que_aparecen_en_la_pelicula
-	FROM film_actor
-	GROUP BY film_id
-	HAVING COUNT(actor_id) > 1)
-GROUP BY CONCAT(a.first_name," ", a.last_name);
-/*
 
